@@ -73,13 +73,9 @@
             {% for mentor in top_mentors %}
             <div class="col-md-3">
                 <div class="p-3">
-                    {% if mentor.profile_image %}
-                    <img src="{{ mentor.profile_image.url }}" class="rounded-circle mb-3 shadow" width="80" height="80">
-                    {% else %}
-                    <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center mx-auto mb-3 shadow" style="width: 80px; height: 80px; font-size: 2rem;">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mb-3 shadow mx-auto" style="width: 80px; height: 80px; font-size: 2rem;">
                         {{ mentor.username|first|upper }}
                     </div>
-                    {% endif %}
                     <h6 class="fw-bold mb-0">{{ mentor.username }}</h6>
                     <small class="opacity-75">{{ mentor.num_challenges }} Challenges Created</small>
                 </div>

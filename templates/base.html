@@ -148,13 +148,9 @@
                     <div class="fw-bold">{{ user.username }}</div>
                     <small class="text-muted text-capitalize">{{ user.role }}</small>
                 </div>
-                {% if user.profile_image %}
-                <img src="{{ user.profile_image.url }}" class="rounded-circle" width="40" height="40" alt="Avatar">
-                {% else %}
                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                     {{ user.username|first|upper }}
                 </div>
-                {% endif %}
                 {% else %}
                 <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary">Login</a>
                 <a href="{% url 'accounts:register' %}" class="btn btn-primary">Join Now</a>

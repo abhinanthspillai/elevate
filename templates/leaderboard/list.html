@@ -45,13 +45,9 @@
                         <td class="px-4 fw-bold">#{{ entry.rank }}</td>
                         <td>
                             <div class="d-flex align-items-center gap-3">
-                                {% if entry.user.profile_image %}
-                                <img src="{{ entry.user.profile_image.url }}" class="rounded-circle" width="32" height="32">
-                                {% else %}
-                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.8rem;">
                                     {{ entry.user.username|first|upper }}
                                 </div>
-                                {% endif %}
                                 <span class="fw-bold">{{ entry.user.username }}</span>
                             </div>
                         </td>
