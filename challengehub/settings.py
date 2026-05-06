@@ -30,7 +30,7 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 if not ALLOWED_HOSTS[0]:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.render.com']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 
 
