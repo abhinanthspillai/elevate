@@ -28,12 +28,16 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-z@#_asbq=-hpbffq8uri4(uj3w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
-# Clean up any whitespace
-ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
+# For Render, we'll be very permissive to get started
+ALLOWED_HOSTS = ['*']
 
-if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
+# This tells Django that it's behind a proxy (Render)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Print for debugging in Render logs
+print(f"DEBUG: ALLOWED_HOSTS is {ALLOWED_HOSTS}")
+print(f"DEBUG: DATABASE_URL exists: {'DATABASE_URL' in os.environ}")
+
 
 
 
