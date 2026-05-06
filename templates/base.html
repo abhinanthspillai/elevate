@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ChallengeHub{% endblock %}</title>
+    <title>{% block title %}Elevate{% endblock %}</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 -->
@@ -100,7 +100,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="p-4 mb-4 text-center">
-            <h4 class="fw-bold text-primary"><i class="fas fa-hubspot"></i> ChallengeHub</h4>
+            <h4 class="fw-bold text-primary"><i class="fas fa-rocket"></i> Elevate</h4>
         </div>
         <nav class="nav flex-column">
             <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'dashboard:index' %}">
@@ -138,7 +138,7 @@
             </button>
             {% else %}
             <a class="navbar-brand fw-bold text-primary" href="{% url 'dashboard:home' %}">
-                <i class="fas fa-hubspot"></i> ChallengeHub
+                <i class="fas fa-rocket"></i> Elevate
             </a>
             {% endif %}
             

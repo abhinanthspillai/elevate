@@ -1,4 +1,4 @@
-# ChallengeHub - Challenge and Productivity Tracking Platform
+# Elevate - Challenge and Productivity Tracking Platform
 
 ## Features
 - **Authentication**: Custom user roles (User, Mentor, Admin).
@@ -14,7 +14,7 @@
 - **Frontend**: Bootstrap 5, Font Awesome, Chart.js, Inter Font
 
 ## How to Run
-1. Create MySQL database `challengehub_db`.
+1. Create MySQL database `Elevate_db`.
 2. Install dependencies: `pip install django mysqlclient pillow`.
 3. Migrate: `python manage.py makemigrations accounts challenges tasks ; python manage.py migrate`.
 4. Seed data: `python manage.py seed_data`.
