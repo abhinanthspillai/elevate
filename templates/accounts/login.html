@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Login - ChallengeHub{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-5">
+        <div class="card p-4 p-md-5">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold">Welcome Back</h3>
+                <p class="text-muted">Sign in to continue your growth journey</p>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Username</label>
+                    <input type="text" name="username" class="form-control py-2" placeholder="Enter your username" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Password</label>
+                    <input type="password" name="password" class="form-control py-2" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold mb-3">Sign In</button>
+                <div class="text-center">
+                    <p class="text-muted small">Don't have an account? <a href="{% url 'accounts:register' %}" class="text-primary text-decoration-none fw-bold">Register</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Admin Panel - ChallengeHub{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold">Platform Overview</h2>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card p-4 bg-primary text-white">
+            <div class="small fw-bold text-uppercase opacity-75">Total Users</div>
+            <div class="h2 fw-bold mb-0">{{ total_users }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4">
+            <div class="text-muted small fw-bold text-uppercase">Total Mentors</div>
+            <div class="h2 fw-bold mb-0">{{ total_mentors }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4">
+            <div class="text-muted small fw-bold text-uppercase">Total Challenges</div>
+            <div class="h2 fw-bold mb-0">{{ total_challenges }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4 border-start border-4 border-warning">
+            <div class="text-muted small fw-bold text-uppercase">Active Category</div>
+            <div class="h5 fw-bold mb-0">
+                {% if most_active_category %}{{ most_active_category.name }}{% else %}N/A{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-4">Challenges by Category</h5>
+            <div style="height: 300px;">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <h5 class="fw-bold mb-4">Quick Links</h5>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'admin:accounts_user_changelist' %}"
+                    class="list-group-item list-group-item-action px-0 d-flex justify-content-between align-items-center">
+                    Manage Users <i class="fas fa-chevron-right small text-muted"></i>
+                </a>
+                <a href="{% url 'admin:challenges_category_changelist' %}"
+                    class="list-group-item list-group-item-action px-0 d-flex justify-content-between align-items-center">
+                    Manage Categories <i class="fas fa-chevron-right small text-muted"></i>
+                </a>
+                <a href="{% url 'challenges:list' %}"
+                    class="list-group-item list-group-item-action px-0 d-flex justify-content-between align-items-center">
+                    Moderate Challenges <i class="fas fa-chevron-right small text-muted"></i>
+                </a>
+                <a href="{% url 'leaderboard:list' %}"
+                    class="list-group-item list-group-item-action px-0 d-flex justify-content-between align-items-center">
+                    Platform Leaderboard <i class="fas fa-chevron-right small text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ categories_labels|safe|json_script:"categories-labels" }}
+{{ categories_data|safe|json_script:"categories-data" }}
+
+<script>
+    const categoriesLabels = JSON.parse(document.getElementById('categories-labels').textContent);
+    const categoriesData = JSON.parse(document.getElementById('categories-data').textContent);
+
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: categoriesLabels,
+            datasets: [{
+                label: 'Number of Challenges',
+                data: categoriesData,
+                backgroundColor: '#6366f1',
+                borderRadius: 10
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5] } } }
+        }
+    });
+</script>
+{% endblock %}

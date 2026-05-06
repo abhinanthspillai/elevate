@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to ChallengeHub{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 text-center bg-white rounded-4 shadow-sm mb-5">
+    <div class="container py-5">
+        <h1 class="display-4 fw-bold mb-3">Level Up Your <span class="text-primary">Productivity</span></h1>
+        <p class="lead text-muted mb-4 mx-auto" style="max-width: 600px;">
+            Join professional challenges, track your personal growth, and compete with others on the ultimate productivity hub.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg px-5">Get Started</a>
+            <a href="{% url 'challenges:list' %}" class="btn btn-outline-secondary btn-lg px-5">Explore Challenges</a>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card text-center p-4">
+            <div class="display-5 fw-bold text-primary mb-2">{{ stats.total_users }}</div>
+            <div class="text-muted text-uppercase small fw-bold">Active Users</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-4">
+            <div class="display-5 fw-bold text-primary mb-2">{{ stats.total_mentors }}</div>
+            <div class="text-muted text-uppercase small fw-bold">Expert Mentors</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-4">
+            <div class="display-5 fw-bold text-primary mb-2">{{ stats.total_challenges }}</div>
+            <div class="text-muted text-uppercase small fw-bold">Challenges</div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Challenges -->
+<section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Featured Challenges</h2>
+        <a href="{% url 'challenges:list' %}" class="text-decoration-none">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="row g-4">
+        {% for challenge in featured_challenges %}
+        <div class="col-md-4">
+            <div class="card h-100 overflow-hidden">
+                <div class="p-4">
+                    <div class="badge-difficulty difficulty-{{ challenge.difficulty|lower }} mb-3 d-inline-block">{{ challenge.difficulty }}</div>
+                    <h5 class="fw-bold">{{ challenge.title }}</h5>
+                    <p class="text-muted small">{{ challenge.description|truncatewords:20 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="small text-muted"><i class="fas fa-calendar-alt"></i> {{ challenge.duration_days }} Days</div>
+                        <a href="{% url 'challenges:detail' challenge.pk %}" class="btn btn-sm btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No challenges available yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Top Mentors -->
+<section class="py-5 bg-primary text-white rounded-4 mb-5">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-5">Learn from the Best</h2>
+        <div class="row g-4">
+            {% for mentor in top_mentors %}
+            <div class="col-md-3">
+                <div class="p-3">
+                    {% if mentor.profile_image %}
+                    <img src="{{ mentor.profile_image.url }}" class="rounded-circle mb-3 shadow" width="80" height="80">
+                    {% else %}
+                    <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center mx-auto mb-3 shadow" style="width: 80px; height: 80px; font-size: 2rem;">
+                        {{ mentor.username|first|upper }}
+                    </div>
+                    {% endif %}
+                    <h6 class="fw-bold mb-0">{{ mentor.username }}</h6>
+                    <small class="opacity-75">{{ mentor.num_challenges }} Challenges Created</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-4 text-center border-top">
+    <p class="text-muted small mb-0">© 2026 ChallengeHub. Built with passion for productivity.</p>
+</footer>
+{% endblock %}

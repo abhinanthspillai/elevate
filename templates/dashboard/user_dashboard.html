@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}User Dashboard - ChallengeHub{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">My Dashboard</h2>
+    <div class="text-muted">{{ user.created_at|date:"F d, Y" }}</div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card p-4 h-100">
+            <div class="text-muted small fw-bold text-uppercase mb-2">Personal Tasks</div>
+            <div class="h3 fw-bold mb-0">{{ total_personal }}</div>
+            <div class="mt-2 text-success small">
+                <i class="fas fa-check-circle"></i> {{ completed_personal }} Completed
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4 h-100">
+            <div class="text-muted small fw-bold text-uppercase mb-2">Joined Challenges</div>
+            <div class="h3 fw-bold mb-0">{{ total_joined }}</div>
+            <div class="mt-2 text-primary small">
+                <i class="fas fa-trophy"></i> Ongoing Growth
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-4 h-100">
+            <div class="text-muted small fw-bold text-uppercase mb-3">Task Completion Rate</div>
+            <div style="height: 100px;">
+                <canvas id="taskChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Pending Tasks -->
+    <div class="col-md-8">
+        <div class="card h-100">
+            <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">Upcoming Tasks</h5>
+                <a href="{% url 'tasks:list' %}" class="btn btn-sm btn-link p-0 text-decoration-none">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4">Task</th>
+                                <th>Due Date</th>
+                                <th>Priority</th>
+                                <th class="text-end px-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in pending_tasks %}
+                            <tr>
+                                <td class="px-4">
+                                    <div class="fw-bold">{{ task.title }}</div>
+                                    <small class="text-muted">{{ task.description|truncatechars:40 }}</small>
+                                </td>
+                                <td>{{ task.due_date }}</td>
+                                <td>
+                                    <span class="badge {% if task.priority == 'High' %}bg-danger{% elif task.priority == 'Medium' %}bg-warning{% else %}bg-info{% endif %}">
+                                        {{ task.priority }}
+                                    </span>
+                                </td>
+                                <td class="text-end px-4">
+                                    <a href="{% url 'tasks:toggle' task.pk %}" class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No pending tasks. <a href="{% url 'tasks:create' %}">Add one?</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header bg-white border-0 py-3 px-4">
+                <h5 class="fw-bold mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body px-4">
+                <div class="list-group list-group-flush">
+                    {% for activity in recent_activity %}
+                    <div class="list-group-item px-0 border-0 mb-3">
+                        <div class="d-flex gap-3">
+                            <div class="flex-shrink-0 bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold small">Completed Challenge Task</div>
+                                <div class="text-muted small">{{ activity.task.task_title }}</div>
+                                <small class="text-muted smaller">{{ activity.completed_date|timesince }} ago</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4 text-muted">No recent activity.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ chart_labels|json_script:"chart-labels" }}
+{{ chart_data|json_script:"chart-data" }}
+<script>
+    const chartLabels = JSON.parse(document.getElementById('chart-labels').textContent);
+    const chartData = JSON.parse(document.getElementById('chart-data').textContent);
+
+    const ctx = document.getElementById('taskChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                label: 'Tasks',
+                data: chartData,
+                backgroundColor: ['#6366f1', '#e2e8f0'],
+                borderRadius: 8,
+                barThickness: 20
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { display: false }, y: { grid: { display: false } } }
+        }
+    });
+</script>
+{% endblock %}

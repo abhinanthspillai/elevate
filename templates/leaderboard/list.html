@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Leaderboard - ChallengeHub{% endblock %}
+
+{% block content %}
+<div class="mb-5 text-center">
+    <h2 class="fw-bold">Community Leaderboard</h2>
+    <p class="text-muted">Top performers on ChallengeHub based on activity and achievements.</p>
+</div>
+
+<div class="row g-4 mb-5">
+    {% for entry in leaderboard|slice:":3" %}
+    <div class="col-md-4">
+        <div class="card p-4 text-center border-0 shadow-lg" style="{% if entry.rank == 1 %}background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; transform: scale(1.05);{% endif %}">
+            <div class="display-6 mb-2">
+                {% if entry.rank == 1 %}🥇{% elif entry.rank == 2 %}🥈{% else %}🥉{% endif %}
+            </div>
+            <h4 class="fw-bold mb-1">{{ entry.user.username }}</h4>
+            <div class="h3 fw-bold mb-3">{{ entry.total_points }} <small class="h6 opacity-75">pts</small></div>
+            <div class="d-flex justify-content-center gap-2 small opacity-75">
+                <span>{{ entry.participation_points }} <i class="fas fa-trophy"></i></span>
+                <span>{{ entry.challenge_points }} <i class="fas fa-check-circle"></i></span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="px-4" style="width: 80px;">Rank</th>
+                        <th>User</th>
+                        <th>Challenge Points</th>
+                        <th>Personal Task Points</th>
+                        <th>Participation</th>
+                        <th class="text-end px-4">Total Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard %}
+                    <tr {% if entry.user == request.user %}class="table-primary"{% endif %}>
+                        <td class="px-4 fw-bold">#{{ entry.rank }}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                {% if entry.user.profile_image %}
+                                <img src="{{ entry.user.profile_image.url }}" class="rounded-circle" width="32" height="32">
+                                {% else %}
+                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    {{ entry.user.username|first|upper }}
+                                </div>
+                                {% endif %}
+                                <span class="fw-bold">{{ entry.user.username }}</span>
+                            </div>
+                        </td>
+                        <td>{{ entry.challenge_points }}</td>
+                        <td>{{ entry.personal_points }}</td>
+                        <td>{{ entry.participation_points }}</td>
+                        <td class="text-end px-4">
+                            <span class="badge bg-primary fs-6">{{ entry.total_points }} pts</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">No data available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
