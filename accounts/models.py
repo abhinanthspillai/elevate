@@ -7,7 +7,7 @@ class User(AbstractUser):
         ('mentor', 'Mentor'),
         ('user', 'User'),
     )
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user', db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
