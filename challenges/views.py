@@ -8,7 +8,7 @@ from django.utils import timezone
 def challenge_list(request):
     query = request.GET.get('q')
     category_id = request.GET.get('category')
-    challenges = Challenge.objects.all()
+    challenges = Challenge.objects.select_related('mentor', 'category').all()
     
     if query:
         challenges = challenges.filter(title__icontains=query)

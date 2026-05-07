@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User
 
 class UserRegistrationForm(UserCreationForm):
+    role = forms.ChoiceField(choices=[('mentor', 'Mentor'), ('user', 'User')], initial='user')
+
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'role')

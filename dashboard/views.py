@@ -41,7 +41,7 @@ def user_dashboard(request):
     chart_labels = ['Completed', 'Pending']
     chart_data = [completed_personal, total_personal - completed_personal]
     
-    recent_activity = TaskCompletion.objects.filter(user=request.user).order_by('-completed_date')[:5]
+    recent_activity = TaskCompletion.objects.filter(user=request.user).select_related('task').order_by('-completed_date')[:5]
     pending_tasks = personal_tasks.filter(status='Pending').order_by('due_date')[:5]
 
     context = {
@@ -84,13 +84,14 @@ def admin_dashboard(request):
     if request.user.role != 'admin':
         return redirect('dashboard:index')
         
+    categories = Category.objects.annotate(num_challenges=Count('challenges'))
     context = {
         'total_users': User.objects.filter(role='user').count(),
         'total_mentors': User.objects.filter(role='mentor').count(),
         'total_challenges': Challenge.objects.count(),
-        'most_active_category': Category.objects.annotate(num_challenges=Count('challenges')).order_by('-num_challenges').first(),
+        'most_active_category': categories.order_by('-num_challenges').first(),
         # Chart: Challenges per Category
-        'categories_labels': [c.name for c in Category.objects.all()],
-        'categories_data': [c.challenges.count() for c in Category.objects.all()],
+        'categories_labels': [c.name for c in categories],
+        'categories_data': [c.num_challenges for c in categories],
     }
     return render(request, 'dashboard/admin_dashboard.html', context)
