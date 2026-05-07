@@ -24,47 +24,44 @@ class Command(BaseCommand):
             admin_user.set_password('admin123')
             admin_user.save()
             self.stdout.write(self.style.SUCCESS('Admin created: admin / admin123'))
-        else:
-            self.stdout.write('Admin already exists.')
 
         # 2. Create Categories
-        categories = ['Coding', 'Design', 'Fitness', 'Marketing', 'Personal Growth']
-        cat_objs = []
-        for cat_name in categories:
-            cat, created = Category.objects.get_or_create(name=cat_name)
-            cat_objs.append(cat)
-            if created:
-                self.stdout.write(f'Category created: {cat_name}')
+        category_names = ['Coding', 'Design', 'Fitness', 'Marketing', 'Personal Growth']
+        categories = {}
+        for name in category_names:
+            cat, _ = Category.objects.get_or_create(name=name)
+            categories[name] = cat
 
         # 3. Create a Mentor
         mentor, created = User.objects.get_or_create(
-            username='mentor_john',
+            username='mentor_sarah',
             defaults={'role': 'mentor'}
         )
         if created:
             mentor.set_password('mentor123')
             mentor.save()
 
-        # 4. Create Sample Challenge
-        if not Challenge.objects.exists():
-            challenge = Challenge.objects.create(
+        # 4. Create Sample Challenges
+        if not Challenge.objects.filter(title='30 Days of Python').exists():
+            c1 = Challenge.objects.create(
                 title='30 Days of Python',
                 description='Master Python basics with daily challenges.',
-                category=cat_objs[0],
+                category=categories['Coding'],
                 mentor=mentor
             )
-            ChallengeTask.objects.create(
-                challenge=challenge,
-                day_number=1,
-                task_title='Install Python and Hello World',
-                task_description='Set up your environment and run your first script.'
+            ChallengeTask.objects.create(challenge=c1, day_number=1, task_title='Environment Setup', task_description='Install Python and VS Code.')
+            ChallengeTask.objects.create(challenge=c1, day_number=2, task_title='Data Types', task_description='Learn about Strings and Integers.')
+            self.stdout.write('Created Python Challenge')
+
+        if not Challenge.objects.filter(title='7-Day Fitness Blitz').exists():
+            c2 = Challenge.objects.create(
+                title='7-Day Fitness Blitz',
+                description='Kickstart your health with these quick workouts.',
+                category=categories['Fitness'],
+                mentor=mentor
             )
-            ChallengeTask.objects.create(
-                challenge=challenge,
-                day_number=2,
-                task_title='Variables and Types',
-                task_description='Learn about integers, strings, and floats.'
-            )
-            self.stdout.write(self.style.SUCCESS('Sample challenge created.'))
+            ChallengeTask.objects.create(challenge=c2, day_number=1, task_title='Full Body Warmup', task_description='10 minutes of jumping jacks and stretching.')
+            self.stdout.write('Created Fitness Challenge')
 
         self.stdout.write(self.style.SUCCESS('Seeding complete!'))
+
