@@ -10,8 +10,8 @@ def leaderboard(request):
     # Calculate all points in a single database query using annotations
     # Points: Challenge Task (10), Personal Task (5), Challenge Participation (20)
     users_with_stats = User.objects.filter(role='user').annotate(
-        cp=Count('taskcompletion', filter=Q(taskcompletion__completed=True), distinct=True),
-        pp=Count('personaltask', filter=Q(personaltask__status='Completed'), distinct=True),
+        cp=Count('task_completions', filter=Q(task_completions__completed=True), distinct=True),
+        pp=Count('personal_tasks', filter=Q(personal_tasks__status='Completed'), distinct=True),
         partp=Count('joined_challenges', distinct=True)
     ).annotate(
         challenge_points=F('cp') * 10,

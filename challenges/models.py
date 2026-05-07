@@ -45,7 +45,7 @@ class ChallengeParticipant(models.Model):
         return f"{self.user.username} joined {self.challenge.title}"
 
 class TaskCompletion(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='task_completions')
     task = models.ForeignKey(ChallengeTask, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     completed_date = models.DateTimeField(null=True, blank=True)
