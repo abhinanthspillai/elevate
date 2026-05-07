@@ -47,7 +47,9 @@ class Command(BaseCommand):
                 title='30 Days of Python',
                 description='Master Python basics with daily challenges.',
                 category=categories['Coding'],
-                mentor=mentor
+                mentor=mentor,
+                difficulty='Easy',
+                duration_days=30
             )
             ChallengeTask.objects.create(challenge=c1, day_number=1, task_title='Environment Setup', task_description='Install Python and VS Code.')
             ChallengeTask.objects.create(challenge=c1, day_number=2, task_title='Data Types', task_description='Learn about Strings and Integers.')
@@ -58,7 +60,9 @@ class Command(BaseCommand):
                 title='7-Day Fitness Blitz',
                 description='Kickstart your health with these quick workouts.',
                 category=categories['Fitness'],
-                mentor=mentor
+                mentor=mentor,
+                difficulty='Medium',
+                duration_days=7
             )
             ChallengeTask.objects.create(challenge=c2, day_number=1, task_title='Full Body Warmup', task_description='10 minutes of jumping jacks and stretching.')
             self.stdout.write('Created Fitness Challenge')
